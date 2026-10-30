@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kazuya — Security Researcher Portfolio</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3a;
+    --text: #e4e4ef;
+    --muted: #8888a0;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --orange: #f97316;
+    --cyan: #06b6d4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    padding: 40px 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--cyan), var(--green));
+  }
+  .header h1 {
+    font-size: 2.4em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--text), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header .subtitle {
+    color: var(--muted);
+    font-size: 1.1em;
+    margin-bottom: 20px;
+  }
+  .badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.82em;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .badge.accent { border-color: var(--accent); color: var(--accent2); }
+  .badge.green { border-color: var(--green); color: var(--green); }
+  .badge.yellow { border-color: var(--yellow); color: var(--yellow); }
+  .badge.cyan { border-color: var(--cyan); color: var(--cyan); }
+  .badge.red { border-color: var(--red); color: var(--red); }
+
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-card .value {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .stat-card .label {
+    font-size: 0.8em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .stat-card.green .value { color: var(--green); }
+  .stat-card.yellow .value { color: var(--yellow); }
+  .stat-card.cyan .value { color: var(--cyan); }
+  .stat-card.red .value { color: var(--red); }
+
+  /* Sections */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .section h2 {
+    font-size: 1.3em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section h2 .icon { font-size: 1.2em; }
+
+  /* Report Cards */
+  .report {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .report:last-child { margin-bottom: 0; }
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .report-title {
+    font-weight: 700;
+    font-size: 1.05em;
+    color: var(--text);
+  }
+  .report-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .tag {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
+  }
+  .tag.high { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .tag.medium { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+  .tag.low { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .tag.info { background: rgba(6,182,212,0.15); color: var(--cyan); border: 1px solid rgba(6,182,212,0.3); }
+  .tag.pending { background: rgba(99,102,241,0.15); color: var(--accent2); border: 1px solid rgba(99,102,241,0.3); }
+  .tag.accepted { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .tag.dup { background: rgba(136,136,160,0.15); color: var(--muted); border: 1px solid rgba(136,136,160,0.3); }
+  .report-body { color: var(--muted); font-size: 0.92em; }
+  .report-body strong { color: var(--text); }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+  }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.82em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.highlight { color: var(--green); font-weight: 600; }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .skill-group h3 {
+    font-size: 0.9em;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .skill-group ul {
+    list-style: none;
+    padding: 0;
+  }
+  .skill-group li {
+    padding: 3px 0;
+    font-size: 0.85em;
+    color: var(--muted);
+  }
+  .skill-group li::before {
+    content: '▸ ';
+    color: var(--accent);
+  }
+
+  /* Pipeline bar */
+  .pipeline {
+    display: flex;
+    gap: 2px;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 12px 0 20px;
+  }
+  .pipeline .seg { height: 100%; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--muted);
+    font-size: 0.85em;
+  }
+
+  @media print {
+    body { background: #fff; color: #111; padding: 20px; }
+    .header, .section, .report, .stat-card { background: #fff; border-color: #ddd; }
+    .header h1 { -webkit-text-fill-color: #111; color: #111; }
+    .stat-card .value { color: #4f46e5; }
+    .report-body, td, th, .skill-group li { color: #444; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🔒 Kazuya</h1>
+    <div class="subtitle">Security Researcher · Bug Bounty Hunter · Offensive Security</div>
+    <div class="badges">
+      <span class="badge accent">HackerOne</span>
+      <span class="badge green">Rust</span>
+      <span class="badge green">Go</span>
+      <span class="badge green">Python</span>
+      <span class="badge cyan">Web3</span>
+      <span class="badge yellow">BFT Consensus</span>
+      <span class="badge red">TEE / Enclave</span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="value">40+</div>
+      <div class="label">Submissions</div>
+    </div>
+    <div class="stat-card green">
+      <div class="value">6</div>
+      <div class="label">Accepted</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="value">25+</div>
+      <div class="label">Pending</div>
+    </div>
+    <div class="stat-card red">
+      <div class="value">$2.5K–$7K</div>
+      <div class="label">Pipeline Value</div>
+    </div>
+    <div class="stat-card cyan">
+      <div class="value">289K+</div>
+      <div class="label">Lines Audited</div>
+    </div>
+  </div>
+
+  <!-- HACKERONE REPORTS -->
+  <div class="section">
+    <h2><span class="icon">🏆</span> HackerOne Reports</h2>
+
+    <div class="report">
+      <div class="report-header">
+        <div class="report-title">Chia Network — clvm_rs Algorithmic Complexity DoS</div>
+      </div>
+      <div class="report-meta">
+        <span class="tag high">High · CVSS 7.5</span>
+        <span class="tag pending">Submitted</span>
+        <span class="tag">#410883</span>
+      </div>
+      <div class="report-body">
+        Identified an algorithmic complexity vulnerability in the Chia Rust-native CLVM bridge where <strong>bytes(program)</strong> or <strong>repr(program)</strong> materializes an expanded serialization of 2^(N+1)-1 bytes, leading to OOM conditions (N=20→2MB, N=30→2GB, N=40→2TB). No authentication required. PoC with measured timing (4,096ms vs 0.02ms baseline), root cause analysis, and negative control.
+      </div>
+    </div>
+
+    <div class="report">
+      <div class="report-header">
+        <div class="report-title">Arc (Circle) — Sign RPC Attestation Bypass</div>
+      </div>
+      <div class="report-meta">
+        <span class="tag medium">Medium · CVSS 6.0</span>
+        <span class="tag dup">Duplicate</span>
+        <span class="tag">#4159903</span>
+      </div>
+      <div class="report-body">
+        The <strong>Sign</strong> RPC in arc-remote-signer does not validate enclave attestation freshness, while <strong>PublicKey</strong> does. Broken security invariant: a compromised enclave with expired attestation can continue signing arbitrary messages undetected. Independently discovered; closed as duplicate of prior submission, confirming validity.
+      </div>
+    </div>
+
+    <div class="report">
+      <div class="report-header">
+        <div class="report-title">Omarchy — Privilege Escalation via sudoers Overwrite</div>
+      </div>
+      <div class="report-meta">
+        <span class="tag medium">Medium</span>
+        <span class="tag pending">Triage</span>
+      </div>
+      <div class="report-body">
+        Privilege escalation via overwriting /etc/sudoers to grant passwordless sudo, rendering the system unbootable, and data destruction by truncating root-owned files.
+      </div>
+    </div>
+  </div>
+
+  <!-- GITHUB / ALGORA -->
+  <div class="section">
+    <h2><span class="icon">💰</span> GitHub / Algora Bounties</h2>
+    <table>
+      <tr><th>PR</th><th>Repository</th><th>Amount</th><th>Status</th></tr>
+      <tr><td>#676</td><td>revert</td><td class="highlight">$100</td><td>Open</td></tr>
+      <tr><td>#1098</td><td>community-content</td><td class="highlight">$60</td><td>Open</td></tr>
+      <tr><td>#4013</td><td>conference-data</td><td class="highlight">$20</td><td>Open</td></tr>
+      <tr><td>#54</td><td>auditpulse</td><td class="highlight">$10</td><td>Open</td></tr>
+      <tr><td>—</td><td>EdgeChains x3</td><td class="highlight">$105</td><td>CLA signed</td></tr>
+    </table>
+  </div>
+
+  <!-- AGENT MARKETPLACES -->
+  <div class="section">
+    <h2><span class="icon">🤖</span> Agent Marketplace Work</h2>
+    <table>
+      <tr><th>Platform</th><th>Work</th><th>Value</th><th>Status</th></tr>
+      <tr><td>SwarmMemo</td><td>6/7 claims accepted</td><td class="highlight">~1,000 cr</td><td><span class="tag accepted">Accepted</span></td></tr>
+      <tr><td>OpenTask</td><td>8 offers submitted</td><td class="highlight">$1,190</td><td><span class="tag pending">Review</span></td></tr>
+      <tr><td>TaskMarket</td><td>13 tasks</td><td class="highlight">$174</td><td><span class="tag pending">Review</span></td></tr>
+      <tr><td>Speedbot</td><td>17 APIs + weekly</td><td class="highlight">$8.50</td><td><span class="tag pending">Pending</span></td></tr>
+      <tr><td>BasedAgents</td><td>All submitted</td><td>—</td><td><span class="tag accepted">Claimed</span></td></tr>
+      <tr><td>DAiL</td><td>Balance</td><td class="highlight">12 DAIL</td><td><span class="tag accepted">Active</span></td></tr>
+    </table>
+  </div>
+
+  <!-- CODE AUDIT -->
+  <div class="section">
+    <h2><span class="icon">🔍</span> Code Audit Experience</h2>
+
+    <div class="report">
+      <div class="report-header">
+        <div class="report-title">Circle Arc — 289K+ Lines (3 Repos)</div>
+      </div>
+      <div class="report-meta">
+        <span class="tag">Rust</span>
+        <span class="tag">Go</span>
+        <span class="tag">BFT</span>
+        <span class="tag">TEE</span>
+      </div>
+      <div class="report-body">
+        <strong>malachite</strong> (96K lines, Rust) — BFT consensus engine. Audited proposal/vote validation, BLS/Ed25519 crypto, state machine logic.<br>
+        <strong>arc-node</strong> (168K lines, Rust) — Blockchain node. Audited EVM frame stack, unsafe blocks, env config.<br>
+        <strong>arc-remote-signer</strong> (25K lines, Go) — TEE remote signer. Audited gRPC server, AWS KMS proxy, vsock routing, enclave crypto. Found attestation bypass + DoS vectors.
+      </div>
+    </div>
+
+    <div class="report">
+      <div class="report-header">
+        <div class="report-title">Chia Network — clvm_rs Python Bindings</div>
+      </div>
+      <div class="report-meta">
+        <span class="tag">Python</span>
+        <span class="tag">Rust</span>
+        <span class="tag high">High Severity</span>
+      </div>
+      <div class="report-body">
+        Algorithmic complexity DoS in CLVM serialization. Method: timing analysis, root cause isolation, PoC with negative control.
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="section">
+    <h2><span class="icon">🛠️</span> Technical Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3>Security Research</h3>
+        <ul>
+          <li>Source code auditing (Rust, Go, Python)</li>
+          <li>Cryptographic protocol analysis</li>
+          <li>Consensus mechanism analysis (BFT)</li>
+          <li>DoS / resource exhaustion analysis</li>
+          <li>Race condition identification</li>
+          <li>gRPC security auditing</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Vulnerability Classes</h3>
+        <ul>
+          <li>CWE-754: Improper Check</li>
+          <li>Algorithmic complexity</li>
+          <li>Missing authentication</li>
+          <li>Broken security invariants</li>
+          <li>Privilege escalation</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Tools & Techniques</h3>
+        <ul>
+          <li>Static analysis</li>
+          <li>Timing analysis</li>
+          <li>PoC development</li>
+          <li>CVSS scoring</li>
+          <li>GitHub API automation</li>
+          <li>Multi-platform automation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="section">
+    <h2><span class="icon">📈</span> Current Pipeline</h2>
+    <div class="pipeline">
+      <div class="seg" style="width:45%; background:var(--accent);" title="OpenTask $1,190"></div>
+      <div class="seg" style="width:15%; background:var(--cyan);" title="Chia $500-5000"></div>
+      <div class="seg" style="width:12%; background:var(--green);" title="GitHub $295"></div>
+      <div class="seg" style="width:8%; background:var(--yellow);" title="TaskMarket $174"></div>
+      <div class="seg" style="width:5%; background:var(--orange);" title="Omarchy $250"></div>
+      <div class="seg" style="width:3%; background:var(--red);" title="Speedbot $8.50"></div>
+    </div>
+    <table>
+      <tr><th>Source</th><th>Amount</th><th>Status</th></tr>
+      <tr><td>Chia Network clvm_rs DoS</td><td class="highlight">$500–$5,000</td><td>Awaiting triage</td></tr>
+      <tr><td>OpenTask (8 offers)</td><td class="highlight">$1,190</td><td>Pending review</td></tr>
+      <tr><td>GitHub/Algora (8 PRs)</td><td class="highlight">$295</td><td>Awaiting merge</td></tr>
+      <tr><td>TaskMarket (13 tasks)</td><td class="highlight">$174</td><td>Pending review</td></tr>
+      <tr><td>Omarchy</td><td class="highlight">$0–$250</td><td>Triage</td></tr>
+      <tr><td>Speedbot (17 APIs)</td><td class="highlight">$8.50</td><td>Pending payout</td></tr>
+    </table>
+  </div>
+
+  <!-- PLATFORMS -->
+  <div class="section">
+    <h2><span class="icon">🌐</span> Platform Presence</h2>
+    <table>
+      <tr><th>Platform</th><th>Identity</th><th>Status</th></tr>
+      <tr><td>HackerOne</td><td>yamazaki kazuya</td><td><span class="tag accepted">Active (2FA)</span></td></tr>
+      <tr><td>GitHub</td><td>kazuyaroz</td><td><span class="tag accepted">Active</span></td></tr>
+      <tr><td>MetaMask</td><td>0xe79d26Ec...</td><td>USDC payouts</td></tr>
+      <tr><td>Base</td><td>0x0b985542...</td><td>USDC routing</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    Portfolio generated October 30, 2026 · Security Research · Bug Bounty · Offensive Security
+  </div>
+
+</div>
+</body>
+</html>
